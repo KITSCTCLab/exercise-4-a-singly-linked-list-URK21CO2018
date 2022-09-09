@@ -1,76 +1,79 @@
-class MyCircularQueue:
-    def __init__(self, size: int):
-        self.queue = [0] * size
-        self.size = size
-        self.rear = -1
-        self.front = -1
+from typing import Optional
 
-    def enqueue(self, value: int) -> bool:
-        if self.is_full():
-            return False
-        if self.front == -1:
-            self.front = 0
-            self.rear = 0
+class Node:
+
+    def __init__(self, data=None, next=None):
+        """
+        Initialises the Node with given attributes
+        """
+        self.data = data
+        self.next = next
+
+
+class LinkedList:
+
+    def __init__(self):
+        """
+        Initialize the head
+        """
+        self.head = None
+
+    def insert_at_end(self, data):
+        new = Node(data, None)
+        current = self.head
+        if current is None:
+            self.head = new
         else:
-            self.rear = (self.rear + 1) % self.size
-        self.queue[self.rear] = value
-        return True
+            while current.next is not None:
+                current = current.next
+            current.next = new
 
-    def dequeue(self) -> bool:
-        if self.is_empty():
-            return False
-        if self.front == self.rear:
-            self.front = -1
-            self.rear = -1
-        else:
-            self.front = (self.front + 1) % self.size
-
-        return True
-
-    def get_front(self) -> int:
-        if not self.is_empty():
-            return self.queue[self.front]
-        return -1
-
-    def get_rear(self):
-        if not self.is_empty():
-            return self.queue[self.rear]
-        return -1
-
-    def is_empty(self):
-        return self.front == -1
-
-    def is_full(self):
-        return (self.front == -0 and self.rear == (self.size - 1)) or (self.front == (self.rear + 1) % self.size)
+    def status(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        print(elements)
 
 
-# Do not change the following code
-operations = []
-for specific_operation in input().split(','):
-    operations.append(specific_operation.strip())
-data = []
-for item in input().split(','):
-    item = item.strip()
-    if item == '-':
-        data.append([])
-    else:
-        data.append([int(item)])
-obj = MyCircularQueue(data[0][0])
-result = []
-for i in range(len(operations)):
-    if i == 0:
-        result.append(None)
-    elif operations[i] == "enqueue":
-        result.append(obj.enqueue(data[i][0]))
-    elif operations[i] == "get_rear":
-        result.append(obj.get_rear())
-    elif operations[i] == "get_front":
-        result.append(obj.get_front())
-    elif operations[i] == "dequeue":
-        result.append(obj.dequeue())
-    elif operations[i] == "is_full":
-        result.append(obj.is_full())
-    elif operations[i] == "is_empty":
-        result.append(obj.is_empty())
+class Solution:
 
-print(result)
+    def addTwoNumbers(self, first_list: Optional[LinkedList], second_list: Optional[LinkedList]) -> Optional[LinkedList]:
+        result = self.get_num(first_list) + self.get_num(second_list)
+        sum_list = LinkedList()
+        for digit in list(map(int, str(result)[::-1])):
+            sum_list.insert_at_end(digit)
+        return sum_list
+
+    def get_num(self, l: Optional[LinkedList]) -> int:
+        curr = l.head
+        if curr is None:
+            return 0
+        num = ""
+        while curr is not None:
+            num = str(curr.data) + num
+            curr = curr.next
+        return int(num)
+
+# Do not edit the following code      
+# Create an instance for LinkedList
+first_list = LinkedList()
+# Create an another instance for LinkedList
+second_list = LinkedList()
+# Read data for first list
+data_for_first_list = list(map(int, input().strip().split(" ")))
+# Add data at the end of first_list
+for data in data_for_first_list:
+    first_list.insert_at_end(data)
+# Read data for second list
+data_for_second_list = list(map(int, input().strip().split(" ")))
+# Add data at the end of second_list
+for data in data_for_second_list:
+    second_list.insert_at_end(data)
+# Create an instance for Solution
+solution = Solution()
+# Pass first_list and second_list to addTwoNumbers, which returns a new linked list
+new_list = solution.addTwoNumbers(first_list, second_list)
+# Display the status of new_list
+new_list.status()
